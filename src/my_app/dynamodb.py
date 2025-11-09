@@ -15,12 +15,14 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-# Create a single session for the application's lifetime
-session = aioboto3.Session(
-    aws_access_key_id=settings.aws_access_key_id,
-    aws_secret_access_key=settings.aws_secret_access_key,
-    region_name=settings.aws_region,
-)
+
+def get_session():
+    """Get or create aioboto3 session with current settings"""
+    return aioboto3.Session(
+        aws_access_key_id=settings.aws_access_key_id,
+        aws_secret_access_key=settings.aws_secret_access_key,
+        region_name=settings.aws_region,
+    )
 
 
 @asynccontextmanager
@@ -29,7 +31,11 @@ async def dynamodb_resource_manager():
     Context manager to get a DynamoDB resource.
     This is the context maanager.
     """
-    async with session.resource("dynamodb", endpoint_url=settings.dynamodb_endpoint_url) as resource:
+    session = get_session()
+    async with session.resource(
+        "dynamodb", 
+        endpoint_url=settings.dynamodb_endpoint_url
+    ) as resource:
         yield resource
 
 
