@@ -22,6 +22,7 @@ def get_session():
         aws_access_key_id=settings.aws_access_key_id,
         aws_secret_access_key=settings.aws_secret_access_key,
         region_name=settings.aws_region,
+        
     )
 
 
@@ -32,10 +33,7 @@ async def dynamodb_resource_manager():
     This is the context maanager.
     """
     session = get_session()
-    async with session.resource(
-        "dynamodb", 
-        endpoint_url=settings.dynamodb_endpoint_url
-    ) as resource:
+    async with session.resource("dynamodb", endpoint_url=settings.dynamodb_endpoint_url) as resource:
         yield resource
 
 
