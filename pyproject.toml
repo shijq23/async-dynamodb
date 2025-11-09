@@ -1,0 +1,26 @@
+[project]
+name = "my-app"
+version = "0.1.0"
+description = "A FastAPI project with aioboto3 and uv."
+requires-python = ">=3.8"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "aioboto3",
+    "pydantic-settings",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio", # Added for async test support
+    "httpx", # For async requests in tests
+    "boto3-stubs[dynamodb]", # For type hints
+    "moto[server]", # For mocking AWS services
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
