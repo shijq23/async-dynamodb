@@ -6,17 +6,18 @@ requires-python = ">=3.8"
 dependencies = [
     "fastapi",
     "uvicorn[standard]",
-    "aioboto3",
+    "aioboto3>=1.3.0", # Pin to a version that works well with recent moto
     "pydantic-settings",
 ]
 
 [project.optional-dependencies]
 dev = [
+    "ruff",
     "pytest",
     "pytest-asyncio", # Use pytest-asyncio to support async test functions
     "httpx", # For async requests in tests
     "boto3-stubs[dynamodb]", # For type hints for AWS DynamoDB
-    "moto[server]", # For mocking AWS services
+    "moto[server]>=4.2.0", # Pin to a version compatible with recent aioboto3/aiobotocore
 ]
 
 [tool.setuptools.packages.find]

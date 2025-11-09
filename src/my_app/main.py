@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from my_app.dynamodb import dynamodb_resource_manager, get_dynamodb
 
 
