@@ -13,9 +13,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
-    "pytest-asyncio", # Added for async test support
+    "pytest-asyncio", # Use pytest-asyncio to support async test functions
     "httpx", # For async requests in tests
-    "boto3-stubs[dynamodb]", # For type hints
+    "boto3-stubs[dynamodb]", # For type hints for AWS DynamoDB
     "moto[server]", # For mocking AWS services
 ]
 
