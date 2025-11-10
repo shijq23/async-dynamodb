@@ -19,6 +19,8 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             # Handle case where table already exists
             print(f"Could not create table, it might already exist. Error: {e}")
+        table = await dynamodb.Table("items")
+        await table.wait_until_exists()
     yield
 
 
