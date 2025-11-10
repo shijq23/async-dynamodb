@@ -1,4 +1,7 @@
+from typing import Any, Generator
 from asgi_lifespan import LifespanManager
+from fastapi.testclient import TestClient
+from moto import mock_aws
 import pytest
 from httpx import AsyncClient, ASGITransport
 from moto.server import ThreadedMotoServer
@@ -35,6 +38,14 @@ def aws_service():
     
     server.stop()
 
+@pytest.fixture(name="test_client", scope="function")
+def test_client(aws_service) -> Generator[TestClient, Any, Any]:
+    """Create a TestClient for the FastAPI app with dependency overrides cleared after each test."""
+    with TestClient(app, raise_server_exceptions=False) as _client:
+        yield _client
+        app.dependency_overrides.clear()
+
+
 @pytest_asyncio.fixture(scope="function")
 async def client(aws_service):
     """
@@ -52,5 +63,14 @@ async def test_create_item(client: AsyncClient):
     Test the /items/{item_id} endpoint with mocked DynamoDB.
     """
     response = await client.post("/items/test-item-1")
+    assert response.status_code == 200
+    assert response.json() == {"status": "success", "item_id": "test-item-1"}
+
+@pytest.mark.asyncio
+async def test_create_item_sync(test_client: TestClient):
+    """
+    Test the /items/{item_id} endpoint with mocked DynamoDB.
+    """
+    response = test_client.post("/items/test-item-1")
     assert response.status_code == 200
     assert response.json() == {"status": "success", "item_id": "test-item-1"}
