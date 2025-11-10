@@ -1,12 +1,12 @@
 from typing import Any, Generator
 from asgi_lifespan import LifespanManager
 from fastapi.testclient import TestClient
-from moto import mock_aws
 import pytest
 from httpx import AsyncClient, ASGITransport
 from moto.server import ThreadedMotoServer
+from unittest.mock import AsyncMock
 
-from my_app.main import app
+from my_app.main import app, create_item
 from my_app.dynamodb import settings
 import requests
 import os
@@ -59,7 +59,7 @@ async def client(aws_service):
 
 @pytest.mark.asyncio
 @pytest.mark.integration
-async def test_create_item(client: AsyncClient):
+async def test_create_item_async(client: AsyncClient):
     """
     Test the /items/{item_id} endpoint with mocked DynamoDB.
     """
@@ -76,3 +76,25 @@ async def test_create_item_sync(test_client: TestClient):
     response = test_client.post("/items/test-item-1")
     assert response.status_code == 200
     assert response.json() == {"status": "success", "item_id": "test-item-1"}
+
+@pytest.mark.asyncio
+@pytest.mark.unit
+async def test_create_item_unit():
+    """
+    Test the create_item handler in isolation with a mocked DynamoDB resource.
+    """
+    # 1. Create a mock for the DynamoDB resource dependency
+    mock_dynamodb = AsyncMock()
+    mock_table = AsyncMock()
+
+    # Configure the mock resource to return a mock table object
+    mock_dynamodb.Table.return_value = mock_table
+
+    # 2. Call the handler function directly with the mock
+    item_id = "unit-test-item"
+    response = await create_item(item_id=item_id, dynamodb=mock_dynamodb)
+
+    # 3. Assert that the mocked methods were called correctly
+    mock_dynamodb.Table.assert_called_once_with("items")
+    mock_table.put_item.assert_awaited_once_with(Item={"id": item_id, "name": f"Item {item_id}"})
+    assert response == {"status": "success", "item_id": item_id}
