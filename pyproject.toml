@@ -18,11 +18,14 @@ dev = [
     "httpx", # For async requests in tests
     "boto3-stubs[dynamodb]", # For type hints for AWS DynamoDB
     "moto[server]>=4.2.0", # Pin to a version compatible with recent aioboto3/aiobotocore
+    "asgi_lifespan"
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
+addopts = "-vv -s"
+pythonpath = ["src",]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function" # Explicitly set for clarity
