@@ -1,6 +1,7 @@
 @echo off
 
 if "%1"=="test" (
+    uv sync --extra dev
     uv run pytest
     goto :eof
 )
