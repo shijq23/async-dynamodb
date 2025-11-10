@@ -58,6 +58,7 @@ async def client(aws_service):
             yield client
 
 @pytest.mark.asyncio
+@pytest.mark.integration
 async def test_create_item(client: AsyncClient):
     """
     Test the /items/{item_id} endpoint with mocked DynamoDB.
@@ -67,6 +68,7 @@ async def test_create_item(client: AsyncClient):
     assert response.json() == {"status": "success", "item_id": "test-item-1"}
 
 @pytest.mark.asyncio
+@pytest.mark.integration
 async def test_create_item_sync(test_client: TestClient):
     """
     Test the /items/{item_id} endpoint with mocked DynamoDB.
