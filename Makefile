@@ -13,7 +13,7 @@ clean:
 	rm -rf __pycache__
 	rm -rf .pytest_cache
 	rm -rf .ruff_cache
-    rm -rf .mypy_cache
+	rm -rf .mypy_cache
 	rm -rf src/*.egg-info
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 
