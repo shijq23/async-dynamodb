@@ -16,6 +16,9 @@ if "%1"=="clean" (
     rmdir /s /q .venv 2>nul
     rmdir /s /q __pycache__ 2>nul
     rmdir /s /q .pytest_cache 2>nul
+    rmdir /s /q .ruff_cache 2>nul
+    rmdir /s /q .mypy_cache 2>nul
+    for /d /r . %%d in (*.egg-info) do @if exist "%%d" rmdir /s /q "%%d"
     for /d /r . %%d in (__pycache__) do @if exist "%%d" rmdir /s /q "%%d"
     goto :eof
 )

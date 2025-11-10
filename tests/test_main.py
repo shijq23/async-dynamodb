@@ -8,7 +8,6 @@ from unittest.mock import AsyncMock
 
 from my_app.main import app, create_item
 from my_app.dynamodb import settings
-import requests
 import os
 import pytest_asyncio
 
